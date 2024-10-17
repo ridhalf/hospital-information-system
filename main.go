@@ -29,6 +29,7 @@ func main() {
 	//blocked by cors policy
 	api := router.Group("/api/v1")
 	api.POST("/users", userController.Register)
+	api.POST("/users/login", userController.Login)
 	api.GET("/users/:id", userController.FindById)
 	err := router.Run(os.Getenv("DOMAIN"))
 	if err != nil {

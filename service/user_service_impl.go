@@ -39,11 +39,22 @@ func (service UserServiceImpl) Register(request web.UserRegisterRequest) (domain
 	}
 	return save, nil
 }
-func (service UserServiceImpl) FindById(request web.UserFindByIdRequest) (web.UserFindByIdResponse, error) {
+func (service UserServiceImpl) Login(request web.UserLoginRequest) (domain.User, error) {
+	user, err := service.userRepository.FindByUsername(request.Username)
+	if err != nil {
+		return domain.User{}, err
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
+	if err != nil {
+		return domain.User{}, err
+	}
+	return user, nil
+}
+
+func (service UserServiceImpl) FindById(request web.UserFindByIdRequest) (domain.User, error) {
 	user, err := service.userRepository.FindById(request.Id)
 	if err != nil {
-		return web.UserFindByIdResponse{}, err
+		return domain.User{}, err
 	}
-	response := web.ToFindByIdResponse(user)
-	return response, nil
+	return user, nil
 }

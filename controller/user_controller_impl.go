@@ -54,12 +54,41 @@ func (controller UserControllerImpl) FindById(ctx *gin.Context) {
 		return
 	}
 	user, err := controller.userService.FindById(request)
+	userDto := web.ToFindByIdResponse(user)
 	if err != nil {
-		response := api.APIResponse("find is failed", http.StatusBadRequest, "BadRequest", user)
+		response := api.APIResponse("find is failed", http.StatusBadRequest, "BadRequest", userDto)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := api.APIResponse("find is success", http.StatusOK, "Success", user)
+	response := api.APIResponse("find is success", http.StatusOK, "Success", userDto)
 	ctx.JSON(http.StatusOK, response)
 	return
+}
+
+func (controller UserControllerImpl) Login(ctx *gin.Context) {
+	request := web.UserLoginRequest{}
+	err := ctx.ShouldBindJSON(&request)
+	if err != nil {
+		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", request)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	user, err := controller.userService.Login(request)
+	if err != nil {
+		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", request)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	token, err := controller.auth.GenerateToken(user.Id)
+	if err != nil {
+		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", request)
+		ctx.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	userResponse := web.ToUserLoginResponse(user, token)
+	response := api.APIResponse("login is success", http.StatusOK, "Success", userResponse)
+	ctx.JSON(http.StatusOK, response)
 }

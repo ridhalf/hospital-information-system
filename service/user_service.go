@@ -7,5 +7,6 @@ import (
 
 type UserService interface {
 	Register(request web.UserRegisterRequest) (domain.User, error)
-	FindById(request web.UserFindByIdRequest) (web.UserFindByIdResponse, error)
+	FindById(request web.UserFindByIdRequest) (domain.User, error)
+	Login(request web.UserLoginRequest) (domain.User, error)
 }

@@ -9,3 +9,7 @@ type UserRegisterRequest struct {
 type UserFindByIdRequest struct {
 	Id int `uri:"id" json:"id"`
 }
+type UserLoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
