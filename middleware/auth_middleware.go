@@ -32,7 +32,7 @@ func AuthMiddleware(authJwt auth.Jwt, userService service.UserService) gin.Handl
 		if !ok || !token.Valid {
 			authFailedMiddleware(ctx)
 		}
-		userID := int(payload["user_id"].(float64))
+		userID := int(payload["userId"].(float64))
 		request := web.UserFindByIdRequest{Id: userID}
 		user, err := userService.FindById(request)
 		if err != nil {
