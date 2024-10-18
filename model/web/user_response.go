@@ -14,7 +14,7 @@ type UserRegisterResponse struct {
 
 func ToRegisterResponse(user domain.User, token string) UserRegisterResponse {
 	return UserRegisterResponse{
-		Id:       user.Id,
+		Id:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
 		Role:     user.Role,
@@ -31,7 +31,7 @@ type UserFindByIdResponse struct {
 
 func ToFindByIdResponse(user domain.User) UserFindByIdResponse {
 	return UserFindByIdResponse{
-		Id:       user.Id,
+		Id:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
 		Role:     user.Role,
@@ -48,7 +48,7 @@ type UserLoginResponse struct {
 
 func ToUserLoginResponse(user domain.User, token string) UserLoginResponse {
 	return UserLoginResponse{
-		Id:       user.Id,
+		Id:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
 		Role:     user.Role,

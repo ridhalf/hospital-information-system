@@ -36,7 +36,7 @@ func (controller PatientControllerImpl) RegisterPatient(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
-	token, err := controller.auth.GenerateToken(register.Id)
+	token, err := controller.auth.GenerateToken(register.ID)
 	if err != nil {
 		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", request)
 		ctx.JSON(http.StatusBadRequest, response)

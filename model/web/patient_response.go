@@ -16,13 +16,13 @@ type PatientRegisterResponse struct {
 
 func ToPatientRegisterResponse(user domain.User, patient domain.Patient, token string) PatientRegisterResponse {
 	return PatientRegisterResponse{
-		Id:          patient.Id,
+		Id:          patient.ID,
 		Name:        patient.Name,
 		DateOfBirth: patient.DateOfBirth,
 		Address:     patient.Address,
 		Phone:       patient.Phone,
 		User: UserRegisterResponse{
-			Id:       user.Id,
+			Id:       user.ID,
 			Username: user.Username,
 			Email:    user.Email,
 			Role:     user.Role,
@@ -42,13 +42,13 @@ type PatientFindByIdResponse struct {
 
 func ToPatientFindByIdResponse(patient domain.Patient) PatientFindByIdResponse {
 	return PatientFindByIdResponse{
-		Id:          patient.Id,
+		Id:          patient.ID,
 		Name:        patient.Name,
 		DateOfBirth: patient.DateOfBirth,
 		Address:     patient.Address,
 		Phone:       patient.Phone,
 		User: UserFindByIdResponse{
-			Id:       patient.User.Id,
+			Id:       patient.User.ID,
 			Username: patient.User.Username,
 			Email:    patient.User.Email,
 			Role:     patient.User.Role,

@@ -2,16 +2,13 @@ package domain
 
 import "time"
 
-// Tabel ini menyimpan informasi tentang janji temu antara pasien dan dokter.
 type Appointment struct {
-	Id              int       `json:"id"`
-	DoctorId        int       `json:"doctor_id"`
-	PatientId       int       `json:"patient_id"`
-	AppointmentDate time.Time `json:"appointment_date"`
-	AppointmentTime time.Time `json:"appointment_time"`
-	Status          string    `json:"status"`
+	ID              int       `json:"id" gorm:"primaryKey;autoIncrement"`                                                // Primary key with auto-increment
+	DoctorID        int       `json:"doctor_id" gorm:"not null"`                                                         // Foreign key referencing the Users table (doctor)
+	PatientID       int       `json:"patient_id" gorm:"not null"`                                                        // Foreign key referencing the Patients table
+	AppointmentDate time.Time `json:"appointment_date" gorm:"not null"`                                                  // Appointment date
+	AppointmentTime time.Time `json:"appointment_time" gorm:"not null"`                                                  // Appointment time
+	Status          string    `json:"status" gorm:"type:ENUM('scheduled', 'completed', 'canceled');default:'scheduled'"` // Status of the appointment
 	CreatedAt       time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt       time.Time `json:"updated_at" gorm:"autoUpdateTime"`
-	Doctor          User      `json:"doctor"`
-	Patient         Patient   `json:"patient"`
+	UpdatedAt       time.Time `json:"updated_at" gorm:"autoUpdateTime"` // Timestamp for creation time
 }

@@ -35,7 +35,7 @@ func (controller UserControllerImpl) Register(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
-	token, err := controller.auth.GenerateToken(user.Id)
+	token, err := controller.auth.GenerateToken(user.ID)
 	if err != nil {
 		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", request)
 		ctx.JSON(http.StatusBadRequest, response)
@@ -81,7 +81,7 @@ func (controller UserControllerImpl) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := controller.auth.GenerateToken(user.Id)
+	token, err := controller.auth.GenerateToken(user.ID)
 	if err != nil {
 		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", request)
 		ctx.JSON(http.StatusBadRequest, response)

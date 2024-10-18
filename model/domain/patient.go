@@ -5,13 +5,13 @@ import (
 )
 
 type Patient struct {
-	Id          int       `json:"id" gorm:"primary_key;column:id"`
-	UserId      int       `json:"user_id" gorm:"column:user_id"`
-	Name        string    `json:"name"`
-	DateOfBirth time.Time `json:"date_of_birth"`
-	Address     string    `json:"address"`
-	Phone       string    `json:"phone"`
-	CreatedAt   time.Time `json:"created_at" gorm:"autoCreateTime"`
-	UpdatedAt   time.Time `json:"updated_at" gorm:"autoUpdateTime"`
-	User        User      `json:"user" gorm:"foreignKey:user_id;references:id"`
+	ID          int       `json:"id" gorm:"primaryKey;autoIncrement"` // Primary key with auto-increment
+	UserID      int       `json:"user_id" gorm:"not null"`            // Foreign key referencing the Users table
+	Name        string    `json:"name" gorm:"size:100;not null"`      // Patient's name with a maximum length of 100
+	DateOfBirth time.Time `json:"date_of_birth" gorm:"not null"`      // Date of birth of the patient
+	Address     string    `json:"address" gorm:"type:text"`           // Patient's address
+	Phone       string    `json:"phone" gorm:"size:15"`               // Patient's phone number with a maximum length of 15
+	CreatedAt   time.Time `json:"created_at" gorm:"autoCreateTime"`   // Timestamp for creation time
+	UpdatedAt   time.Time `json:"updated_at" gorm:"autoUpdateTime"`   // Timestamp for last update
+	User        User      `json:"user" gorm:"foreignKey:user_id"`
 }

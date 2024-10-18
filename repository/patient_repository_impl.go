@@ -22,13 +22,13 @@ func (repository PatientRepositoryImpl) Save(patient domain.Patient) (domain.Pat
 	return patient, nil
 }
 
-func (repository PatientRepositoryImpl) FindById(id int) (domain.Patient, error) {
+func (repository PatientRepositoryImpl) FindById(id int, withRelation bool) (domain.Patient, error) {
 	patient := domain.Patient{}
-	err := repository.db.
-		Joins("JOIN users u ON u.id = patients.user_id").
-		Select("patients.*, u.username, u.email, u.role").
-		Where("patients.id = ?", id).
-		First(&patient).Error
+	query := repository.db.Model(&patient).Where("id = ?", id)
+	if withRelation {
+		query = query.Preload("User")
+	}
+	err := query.First(&patient).Error
 	if err != nil {
 		return domain.Patient{}, err
 	}

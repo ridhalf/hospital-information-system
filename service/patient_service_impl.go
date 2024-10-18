@@ -48,7 +48,7 @@ func (service PatientServiceImpl) Register(request web.PatientRegisterRequest) (
 	}
 
 	patient := domain.Patient{
-		UserId:      register.Id,
+		UserID:      register.ID,
 		Name:        request.Name,
 		DateOfBirth: dateOfBirth,
 		Address:     request.Address,
@@ -62,7 +62,7 @@ func (service PatientServiceImpl) Register(request web.PatientRegisterRequest) (
 }
 
 func (service PatientServiceImpl) FindById(request web.PatientFindByIdRequest) (domain.Patient, error) {
-	patient, err := service.patientRepository.FindById(request.Id)
+	patient, err := service.patientRepository.FindById(request.Id, true)
 	if err != nil {
 		return domain.Patient{}, err
 	}
