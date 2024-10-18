@@ -6,6 +6,7 @@ import (
 	"hospital-information-system/model/api"
 	"hospital-information-system/model/domain"
 	"hospital-information-system/model/web"
+	"hospital-information-system/policy"
 	"hospital-information-system/service"
 	"net/http"
 )
@@ -61,27 +62,20 @@ func (controller PatientControllerImpl) FindById(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
-	user := ctx.MustGet("user").(domain.User)
-	if !controller.userPolicy(user, request) {
-		response := api.APIResponse("find patient is failed", http.StatusForbidden, "Forbidden", nil)
-		ctx.JSON(http.StatusForbidden, response)
-		return
-	}
 	patient, err := controller.patientService.FindById(request)
 	if err != nil {
 		response := api.APIResponse("find patient is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
+	user := ctx.MustGet("user").(domain.User)
+	if !policy.UserPolicy(user, patient) {
+		response := api.APIResponse("find patient is failed", http.StatusForbidden, "Forbidden", nil)
+		ctx.JSON(http.StatusForbidden, response)
+		return
+	}
 	patientResponse := web.ToPatientFindByIdResponse(patient)
 	response := api.APIResponse("find patient is success", http.StatusOK, "Success", patientResponse)
 
 	ctx.JSON(http.StatusOK, response)
-}
-
-func (controller PatientControllerImpl) userPolicy(user domain.User, request web.PatientFindByIdRequest) bool {
-	if user.ID != request.Id {
-		return false
-	}
-	return true
 }
