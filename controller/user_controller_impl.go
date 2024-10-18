@@ -25,19 +25,19 @@ func (controller UserControllerImpl) Register(ctx *gin.Context) {
 	request := web.UserRegisterRequest{}
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
-		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", request)
+		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 	user, err := controller.userService.Register(request)
 	if err != nil {
-		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", request)
+		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 	token, err := controller.auth.GenerateToken(user.ID)
 	if err != nil {
-		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", request)
+		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -49,14 +49,14 @@ func (controller UserControllerImpl) FindById(ctx *gin.Context) {
 	request := web.UserFindByIdRequest{}
 	err := ctx.ShouldBindUri(&request)
 	if err != nil {
-		response := api.APIResponse("find is failed", http.StatusBadRequest, "BadRequest", request)
+		response := api.APIResponse("find is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 	user, err := controller.userService.FindById(request)
 	userDto := web.ToFindByIdResponse(user)
 	if err != nil {
-		response := api.APIResponse("find is failed", http.StatusBadRequest, "BadRequest", userDto)
+		response := api.APIResponse("find is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
@@ -69,21 +69,21 @@ func (controller UserControllerImpl) Login(ctx *gin.Context) {
 	request := web.UserLoginRequest{}
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
-		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", request)
+		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	user, err := controller.userService.Login(request)
 	if err != nil {
-		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", request)
+		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
 	token, err := controller.auth.GenerateToken(user.ID)
 	if err != nil {
-		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", request)
+		response := api.APIResponse("login is failed", http.StatusBadRequest, "BadRequest", nil)
 		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
