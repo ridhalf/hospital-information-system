@@ -29,3 +29,16 @@ func ValidateMessage(ctx *gin.Context) {
 	ctx.JSON(http.StatusForbidden, response)
 	return
 }
+
+func HandleBindError(ctx *gin.Context, err string) {
+	response := api.APIResponse(err, http.StatusBadRequest, "BadRequest", nil)
+	ctx.JSON(http.StatusBadRequest, response)
+}
+func HandleServiceError(ctx *gin.Context, err error) {
+	response := api.APIResponse(err.Error(), http.StatusBadRequest, "BadRequest", nil)
+	ctx.JSON(http.StatusBadRequest, response)
+}
+func HandleRequestSuccess(ctx *gin.Context, msg string, data interface{}) {
+	apiResponse := api.APIResponse(msg, http.StatusOK, "Success", data)
+	ctx.JSON(http.StatusOK, apiResponse)
+}

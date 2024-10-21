@@ -30,7 +30,7 @@ func (service UserServiceImpl) Register(request web.UserRegisterRequest) (domain
 	}
 	password, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.MinCost)
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, errors.New("failed to generate password hash")
 	}
 	user := domain.User{
 		Username: strings.Split(request.Email, "@")[0],
@@ -40,18 +40,18 @@ func (service UserServiceImpl) Register(request web.UserRegisterRequest) (domain
 	}
 	save, err := service.userRepository.Save(user)
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, errors.New("failed to save user")
 	}
 	return save, nil
 }
 func (service UserServiceImpl) Login(request web.UserLoginRequest) (domain.User, error) {
 	user, err := service.userRepository.FindByUsername(request.Username)
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, errors.New("user not found")
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(request.Password))
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, errors.New("failed to generate password hash")
 	}
 	return user, nil
 }
@@ -59,7 +59,7 @@ func (service UserServiceImpl) Login(request web.UserLoginRequest) (domain.User,
 func (service UserServiceImpl) FindById(request web.UserFindByIdRequest) (domain.User, error) {
 	user, err := service.userRepository.FindById(request.Id)
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, errors.New("user not found")
 	}
 	return user, nil
 }
