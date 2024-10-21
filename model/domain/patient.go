@@ -15,3 +15,7 @@ type Patient struct {
 	UpdatedAt   time.Time `json:"updated_at" gorm:"autoUpdateTime"`   // Timestamp for last update
 	User        User      `json:"user" gorm:"foreignKey:user_id"`
 }
+
+func (Patient) TableName() string {
+	return "Patients"
+}

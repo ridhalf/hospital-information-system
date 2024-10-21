@@ -20,12 +20,15 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	patientRepository := repository.NewPatientRepository(db)
 	patientService := service.NewPatientService(patientRepository, userRepository)
+	medicalRecord := repository.NewMedicalRecordRepository(db)
+	medicalRecordService := service.NewMedicalRecordService(medicalRecord)
 
 	authJwt := auth.NewJwt()
-	authMiddleware := middleware.AuthMiddleware(authJwt, userService)
+	authMiddleware := middleware.AuthMiddleware(authJwt, userService, patientService)
 
 	userController := controller.NewUserController(userService, authJwt)
 	patientController := controller.NewPatientController(patientService, authJwt)
+	medicalRecordController := controller.NewMedicalRecordController(medicalRecordService, authJwt)
 
 	router := gin.Default()
 	//blocked by cors policy
@@ -38,6 +41,8 @@ func main() {
 
 	api.POST("/patients/register", patientController.RegisterPatient)
 	api.GET("/patients/:id", authMiddleware, patientController.FindById)
+
+	api.GET("/medical_record/:patient_id", authMiddleware, medicalRecordController.FindByPatientID)
 	err := router.Run(os.Getenv("DOMAIN"))
 	if err != nil {
 		panic(err)

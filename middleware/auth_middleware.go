@@ -5,13 +5,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"hospital-information-system/auth"
 	"hospital-information-system/model/api"
+	"hospital-information-system/model/constants"
 	"hospital-information-system/model/web"
 	"hospital-information-system/service"
 	"net/http"
 	"strings"
 )
 
-func AuthMiddleware(authJwt auth.Jwt, userService service.UserService) gin.HandlerFunc {
+func AuthMiddleware(authJwt auth.Jwt, userService service.UserService, patientService service.PatientService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authHeader := ctx.GetHeader("Authorization")
 		if !strings.Contains(authHeader, "Bearer") {
@@ -40,6 +41,14 @@ func AuthMiddleware(authJwt auth.Jwt, userService service.UserService) gin.Handl
 			return
 		}
 		ctx.Set("user", user)
+		if user.Role == constants.PATIENT {
+			patient, err := patientService.FindByUserId(user.ID)
+			if err != nil {
+				authFailedMiddleware(ctx)
+				return
+			}
+			ctx.Set("patient", patient)
+		}
 	}
 }
 func authFailedMiddleware(ctx *gin.Context) {

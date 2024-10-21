@@ -13,6 +13,7 @@ import (
 type PatientService interface {
 	Register(request web.PatientRegisterRequest) (domain.User, domain.Patient, error)
 	FindById(request web.PatientFindByIdRequest) (domain.Patient, error)
+	FindByUserId(userId int) (domain.Patient, error)
 }
 type PatientServiceImpl struct {
 	patientRepository repository.PatientRepository
@@ -72,4 +73,11 @@ func (service PatientServiceImpl) FindById(request web.PatientFindByIdRequest) (
 	}
 	return patient, nil
 
+}
+func (service PatientServiceImpl) FindByUserId(userId int) (domain.Patient, error) {
+	patient, err := service.patientRepository.FindByUserId(userId, true)
+	if err != nil {
+		return domain.Patient{}, err
+	}
+	return patient, nil
 }

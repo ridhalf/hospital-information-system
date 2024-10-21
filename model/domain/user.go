@@ -13,3 +13,7 @@ type User struct {
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`                                                                                                     // Timestamp for creation time
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`                                                                                                     // Timestamp for creation time
 }
+
+func (User) TableName() string {
+	return "Users"
+}

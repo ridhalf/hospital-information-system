@@ -10,4 +10,9 @@ type MedicalRecord struct {
 	Medication string    `json:"medication" gorm:"type:text"`        // Medication prescribed to the patient
 	CreatedAt  time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt  time.Time `json:"updated_at" gorm:"autoUpdateTime"`
+	Patient    Patient   `json:"patient" gorm:"foreignKey:patient_id"`
+}
+
+func (MedicalRecord) TableName() string {
+	return "MedicalRecords"
 }
