@@ -31,7 +31,7 @@ func (service AppointmentServiceImpl) CreateSchedule(request web.AppointmentCrea
 	//check schedule
 	count, err := service.appointmentRepository.Count(appointment)
 	if err != nil {
-		return domain.Appointment{}, err
+		return domain.Appointment{}, errors.New("failed to count appointments")
 	}
 	if count > 0 {
 		return domain.Appointment{}, errors.New("appointment already exists")
@@ -39,7 +39,7 @@ func (service AppointmentServiceImpl) CreateSchedule(request web.AppointmentCrea
 
 	save, err := service.appointmentRepository.Save(appointment)
 	if err != nil {
-		return domain.Appointment{}, err
+		return domain.Appointment{}, errors.New("failed to save appointment")
 	}
 	return save, nil
 }

@@ -27,7 +27,7 @@ func (controller PatientControllerImpl) RegisterPatient(ctx *gin.Context) {
 	request := web.PatientRegisterRequest{}
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
-		HandleBindError(ctx, "register patient is failed")
+		HandleBindError(ctx)
 		return
 	}
 
@@ -51,7 +51,7 @@ func (controller PatientControllerImpl) FindById(ctx *gin.Context) {
 	request := web.PatientFindByIdRequest{}
 	err := ctx.ShouldBindUri(&request)
 	if err != nil {
-		HandleBindError(ctx, "find patient is failed")
+		HandleBindError(ctx)
 		return
 	}
 	if !AllowReadPatient(ctx) || !PrivilegePatient(ctx, request.Id) {

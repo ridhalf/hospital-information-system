@@ -28,7 +28,7 @@ func (controller UserControllerImpl) Register(ctx *gin.Context) {
 	request := web.UserRegisterRequest{}
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
-		HandleBindError(ctx, "register is failed")
+		HandleBindError(ctx)
 		return
 	}
 	user, err := controller.userService.Register(request)
@@ -49,7 +49,7 @@ func (controller UserControllerImpl) FindById(ctx *gin.Context) {
 	request := web.UserFindByIdRequest{}
 	err := ctx.ShouldBindUri(&request)
 	if err != nil {
-		HandleBindError(ctx, "failed to bind request parameters")
+		HandleBindError(ctx)
 		return
 	}
 	user, err := controller.userService.FindById(request)
@@ -66,7 +66,7 @@ func (controller UserControllerImpl) Login(ctx *gin.Context) {
 	request := web.UserLoginRequest{}
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
-		HandleBindError(ctx, "failed to bind request parameters")
+		HandleBindError(ctx)
 		return
 	}
 

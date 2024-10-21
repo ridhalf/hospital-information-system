@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"hospital-information-system/model/domain"
 	"hospital-information-system/model/web"
 	"hospital-information-system/repository"
@@ -22,7 +23,7 @@ func NewMedicalRecordService(medicalRecordRepository repository.MedicalRecordRep
 func (service MedicalRecordServiceImpl) FindByPatientID(request web.MedicalRecordFindByPatientIDRequest) ([]domain.MedicalRecord, error) {
 	medicalRecords, err := service.medicalRecordRepository.FindByPatientId(request.PatientID, true)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("medical records is not found")
 	}
 	return medicalRecords, nil
 }

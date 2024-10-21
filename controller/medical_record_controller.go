@@ -3,10 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"hospital-information-system/auth"
-	"hospital-information-system/model/api"
 	"hospital-information-system/model/web"
 	"hospital-information-system/service"
-	"net/http"
 )
 
 type MedicalRecordController interface {
@@ -28,8 +26,7 @@ func (controller MedicalRecordControllerImpl) FindByPatientID(ctx *gin.Context) 
 	request := web.MedicalRecordFindByPatientIDRequest{}
 	err := ctx.ShouldBindUri(&request)
 	if err != nil {
-		response := api.APIResponse("find medical record is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleBindError(ctx)
 		return
 	}
 	if !AllowReadPatient(ctx) || !PrivilegePatient(ctx, request.PatientID) {
@@ -37,13 +34,11 @@ func (controller MedicalRecordControllerImpl) FindByPatientID(ctx *gin.Context) 
 	}
 	medicalRecords, err := controller.medicalRecordService.FindByPatientID(request)
 	if err != nil {
-		response := api.APIResponse("find medical record is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleServiceError(ctx, err)
 		return
 	}
 	medicalRecordResponses := web.ToMedicalRecordResponses(medicalRecords)
-	response := api.APIResponse("find medical record is success", http.StatusOK, "Success", medicalRecordResponses)
-	ctx.JSON(http.StatusOK, response)
+	HandleRequestSuccess(ctx, "medical record found is successfully", medicalRecordResponses)
 	return
 
 }

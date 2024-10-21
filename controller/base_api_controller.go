@@ -30,8 +30,8 @@ func ValidateMessage(ctx *gin.Context) {
 	return
 }
 
-func HandleBindError(ctx *gin.Context, err string) {
-	response := api.APIResponse(err, http.StatusBadRequest, "BadRequest", nil)
+func HandleBindError(ctx *gin.Context) {
+	response := api.APIResponse("failed to bind request", http.StatusBadRequest, "BadRequest", nil)
 	ctx.JSON(http.StatusBadRequest, response)
 }
 func HandleServiceError(ctx *gin.Context, err error) {
