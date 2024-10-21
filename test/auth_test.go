@@ -1,11 +1,13 @@
 package test
 
 import (
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/stretchr/testify/assert"
 	"hospital-information-system/auth"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestGenerateToken(t *testing.T) {
@@ -59,4 +61,16 @@ func TestValidateToken_InvalidToken(t *testing.T) {
 	// Validate an invalid token
 	_, err := service.ValidateToken("invalid.token.string")
 	assert.Error(t, err)
+}
+func TestDate(t *testing.T) {
+	// Buat objek time.Time
+	currentTime := time.Now()
+
+	// Konversi ke string dengan format yang diinginkan
+	dateString := currentTime.Format("2006-01-02") // Format tanggal
+	timeString := currentTime.Format("15:04:05")   // Format waktu
+
+	// Output hasil konversi
+	fmt.Println("Tanggal:", dateString)
+	fmt.Println("Waktu:", timeString)
 }
