@@ -3,10 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"hospital-information-system/auth"
-	"hospital-information-system/model/api"
 	"hospital-information-system/model/web"
 	"hospital-information-system/service"
-	"net/http"
 )
 
 type UserController interface {
@@ -40,8 +38,7 @@ func (controller UserControllerImpl) Register(ctx *gin.Context) {
 	}
 	token, err := controller.auth.GenerateToken(user.ID)
 	if err != nil {
-		response := api.APIResponse("generate token is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleGenerateTokenError(ctx)
 		return
 	}
 	response := web.ToRegisterResponse(user, token)
@@ -81,8 +78,7 @@ func (controller UserControllerImpl) Login(ctx *gin.Context) {
 
 	token, err := controller.auth.GenerateToken(user.ID)
 	if err != nil {
-		response := api.APIResponse("generate token is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleGenerateTokenError(ctx)
 		return
 	}
 

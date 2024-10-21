@@ -42,3 +42,7 @@ func HandleRequestSuccess(ctx *gin.Context, msg string, data interface{}) {
 	apiResponse := api.APIResponse(msg, http.StatusOK, "Success", data)
 	ctx.JSON(http.StatusOK, apiResponse)
 }
+func HandleGenerateTokenError(ctx *gin.Context) {
+	response := api.APIResponse("generate token is failed", http.StatusBadRequest, "BadRequest", nil)
+	ctx.JSON(http.StatusBadRequest, response)
+}

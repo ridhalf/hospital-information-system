@@ -3,10 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"hospital-information-system/auth"
-	"hospital-information-system/model/api"
 	"hospital-information-system/model/web"
 	"hospital-information-system/service"
-	"net/http"
 )
 
 type PatientController interface {
@@ -29,26 +27,23 @@ func (controller PatientControllerImpl) RegisterPatient(ctx *gin.Context) {
 	request := web.PatientRegisterRequest{}
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
-		response := api.APIResponse("register patient is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleBindError(ctx, "register patient is failed")
 		return
 	}
 
 	register, patient, err := controller.patientService.Register(request)
 	if err != nil {
-		response := api.APIResponse("register patient is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleServiceError(ctx, err)
 		return
 	}
 	token, err := controller.auth.GenerateToken(register.ID)
 	if err != nil {
-		response := api.APIResponse("register is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleGenerateTokenError(ctx)
 		return
 	}
 	userResponse := web.ToPatientRegisterResponse(register, patient, token)
-	response := api.APIResponse("register patient is success", http.StatusOK, "Success", userResponse)
-	ctx.JSON(http.StatusOK, response)
+	HandleRequestSuccess(ctx, "register patient is success", userResponse)
+	return
 
 }
 
@@ -56,8 +51,7 @@ func (controller PatientControllerImpl) FindById(ctx *gin.Context) {
 	request := web.PatientFindByIdRequest{}
 	err := ctx.ShouldBindUri(&request)
 	if err != nil {
-		response := api.APIResponse("find patient is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleBindError(ctx, "find patient is failed")
 		return
 	}
 	if !AllowReadPatient(ctx) || !PrivilegePatient(ctx, request.Id) {
@@ -65,12 +59,10 @@ func (controller PatientControllerImpl) FindById(ctx *gin.Context) {
 	}
 	patient, err := controller.patientService.FindById(request)
 	if err != nil {
-		response := api.APIResponse("find patient is failed", http.StatusBadRequest, "BadRequest", nil)
-		ctx.JSON(http.StatusBadRequest, response)
+		HandleServiceError(ctx, err)
 		return
 	}
 	patientResponse := web.ToPatientFindByIdResponse(patient)
-	response := api.APIResponse("find patient is success", http.StatusOK, "Success", patientResponse)
-
-	ctx.JSON(http.StatusOK, response)
+	HandleRequestSuccess(ctx, "find patient is success", patientResponse)
+	return
 }

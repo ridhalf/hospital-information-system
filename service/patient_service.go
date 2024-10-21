@@ -32,7 +32,7 @@ func (service PatientServiceImpl) Register(request web.PatientRegisterRequest) (
 	}
 	password, err := bcrypt.GenerateFromPassword([]byte(request.User.Password), bcrypt.MinCost)
 	if err != nil {
-		return domain.User{}, domain.Patient{}, err
+		return domain.User{}, domain.Patient{}, errors.New("failed to generate password hash")
 	}
 	user := domain.User{
 		Username: strings.Split(request.User.Email, "@")[0],
@@ -42,14 +42,14 @@ func (service PatientServiceImpl) Register(request web.PatientRegisterRequest) (
 	}
 	register, err := service.userRepository.Save(user)
 	if err != nil {
-		return domain.User{}, domain.Patient{}, err
+		return domain.User{}, domain.Patient{}, errors.New("failed to save user")
 	}
 	if request.DateOfBirth == "" {
 		return register, domain.Patient{}, errors.New("invalid date of birth")
 	}
 	dateOfBirth, err := time.Parse("2006-04-02", request.DateOfBirth)
 	if err != nil {
-		return domain.User{}, domain.Patient{}, err
+		return domain.User{}, domain.Patient{}, errors.New("invalid date of birth")
 	}
 
 	patient := domain.Patient{
@@ -61,7 +61,7 @@ func (service PatientServiceImpl) Register(request web.PatientRegisterRequest) (
 	}
 	save, err := service.patientRepository.Save(patient)
 	if err != nil {
-		return domain.User{}, domain.Patient{}, err
+		return domain.User{}, domain.Patient{}, errors.New("failed to save patient")
 	}
 	return register, save, nil
 }
@@ -69,7 +69,7 @@ func (service PatientServiceImpl) Register(request web.PatientRegisterRequest) (
 func (service PatientServiceImpl) FindById(request web.PatientFindByIdRequest) (domain.Patient, error) {
 	patient, err := service.patientRepository.FindById(request.Id, true)
 	if err != nil {
-		return domain.Patient{}, err
+		return domain.Patient{}, errors.New("failed to find patient")
 	}
 	return patient, nil
 
@@ -77,7 +77,7 @@ func (service PatientServiceImpl) FindById(request web.PatientFindByIdRequest) (
 func (service PatientServiceImpl) FindByUserId(userId int) (domain.Patient, error) {
 	patient, err := service.patientRepository.FindByUserId(userId, true)
 	if err != nil {
-		return domain.Patient{}, err
+		return domain.Patient{}, errors.New("failed to find patient")
 	}
 	return patient, nil
 }
