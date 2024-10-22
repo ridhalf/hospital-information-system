@@ -24,6 +24,8 @@ func main() {
 	medicalRecordService := service.NewMedicalRecordService(medicalRecord)
 	appointmentRepository := repository.NewAppointmentRepository(db)
 	appointmentService := service.NewAppointmentService(appointmentRepository)
+	prescriptionRepository := repository.NewPrescriptionRepository(db)
+	prescriptionService := service.NewPrescriptionService(prescriptionRepository, patientRepository, userRepository)
 
 	authJwt := auth.NewJwt()
 	authMiddleware := middleware.AuthMiddleware(authJwt, userService, patientService)
@@ -32,6 +34,7 @@ func main() {
 	patientController := controller.NewPatientController(patientService, authJwt)
 	medicalRecordController := controller.NewMedicalRecordController(medicalRecordService, authJwt)
 	appointmentController := controller.NewAppointmentController(appointmentService, authJwt)
+	prescriptionController := controller.NewPrescriptionController(prescriptionService)
 
 	router := gin.Default()
 	//blocked by cors policy
@@ -48,6 +51,8 @@ func main() {
 	api.GET("/medical_record/:patient_id", authMiddleware, medicalRecordController.FindByPatientID)
 
 	api.POST("/appointment/create", authMiddleware, appointmentController.CreateSchedule)
+
+	api.POST("/prescription/create", authMiddleware, prescriptionController.Create)
 
 	err := router.Run(os.Getenv("DOMAIN"))
 	if err != nil {

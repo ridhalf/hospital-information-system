@@ -10,6 +10,7 @@ type UserRepository interface {
 	FindById(id int) (domain.User, error)
 	Save(user domain.User) (domain.User, error)
 	Update(user domain.User) (domain.User, error)
+	Count(ID int) (int64, error)
 }
 type UserRepositoryImpl struct {
 	db *gorm.DB
@@ -51,4 +52,12 @@ func (repository UserRepositoryImpl) Update(user domain.User) (domain.User, erro
 		return domain.User{}, err
 	}
 	return user, nil
+}
+func (repository UserRepositoryImpl) Count(ID int) (int64, error) {
+	var count int64
+	err := repository.db.Model(&domain.User{}).Where("id = ?", ID).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }

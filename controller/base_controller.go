@@ -24,6 +24,22 @@ func PrivilegePatient(ctx *gin.Context, patientId int) bool {
 	ValidateMessage(ctx)
 	return false
 }
+func AllowReadDoctor(ctx *gin.Context) bool {
+	user := ctx.MustGet("user").(domain.User)
+	if user.Role == constants.DOCTOR {
+		return true
+	}
+	ValidateMessage(ctx)
+	return false
+}
+func PrivilegeDoctor(ctx *gin.Context, doctorID int) bool {
+	user := ctx.MustGet("user").(domain.User)
+	if user.ID == doctorID {
+		return true
+	}
+	ValidateMessage(ctx)
+	return false
+}
 func ValidateMessage(ctx *gin.Context) {
 	response := api.APIResponse("sorry, but you do not have access to this area. Contact support for further assistance", http.StatusForbidden, "Forbidden", nil)
 	ctx.JSON(http.StatusForbidden, response)
