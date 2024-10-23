@@ -7,6 +7,7 @@ import (
 
 type PrescriptionRepository interface {
 	Save(prescription domain.Prescription) (domain.Prescription, error)
+	Update(prescription domain.Prescription) (domain.Prescription, error)
 }
 type PrescriptionRepositoryImpl struct {
 	db *gorm.DB
@@ -19,6 +20,13 @@ func NewPrescriptionRepository(db *gorm.DB) PrescriptionRepository {
 }
 
 func (repository PrescriptionRepositoryImpl) Save(prescription domain.Prescription) (domain.Prescription, error) {
+	err := repository.db.Save(&prescription).Error
+	if err != nil {
+		return domain.Prescription{}, err
+	}
+	return prescription, nil
+}
+func (repository PrescriptionRepositoryImpl) Update(prescription domain.Prescription) (domain.Prescription, error) {
 	err := repository.db.Save(&prescription).Error
 	if err != nil {
 		return domain.Prescription{}, err

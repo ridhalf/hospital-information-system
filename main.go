@@ -52,7 +52,8 @@ func main() {
 
 	api.POST("/appointment/create", authMiddleware, appointmentController.CreateSchedule)
 
-	api.POST("/prescription/create", authMiddleware, prescriptionController.Create)
+	api.POST("/prescription", authMiddleware, prescriptionController.Create)
+	api.PUT("/prescription", authMiddleware, prescriptionController.Update)
 
 	err := router.Run(os.Getenv("DOMAIN"))
 	if err != nil {
